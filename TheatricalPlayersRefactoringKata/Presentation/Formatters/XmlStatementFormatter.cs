@@ -16,7 +16,7 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Formatters
             var xdoc = new XDocument(
                 new XDeclaration("1.0", "utf-8", null),
                 new XElement("Statement",
-                    new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"),  // Adiciona o namespace xsi
+                    new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"),
                     new XAttribute(XNamespace.Xmlns + "xsd", "http://www.w3.org/2001/XMLSchema"),      
                     new XElement("Customer", statementResult.CustomerName),
                     new XElement("Items",
@@ -30,12 +30,12 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Formatters
                     new XElement("EarnedCredits", statementResult.VolumeCredits)
                 )
             );
-            
+           
             using (var memoryStream = new MemoryStream())
             {
                 var xmlWriterSettings = new XmlWriterSettings
                 {
-                    Encoding = new UTF8Encoding(true),
+                    Encoding = new UTF8Encoding(true), // Importante: true para incluir BOM
                     Indent = true,
                     OmitXmlDeclaration = false
                 };
@@ -43,15 +43,16 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Formatters
                 using (var xmlTextWriter = XmlWriter.Create(memoryStream, xmlWriterSettings))
                 {
                     xdoc.Save(xmlTextWriter);
-                    xmlTextWriter.Close();
                 }
 
                 memoryStream.Position = 0;
-                using (var reader = new StreamReader(memoryStream, Encoding.UTF8))
+                
+                // Use UTF8Encoding(true) no StreamReader
+                using (var reader = new StreamReader(memoryStream, new UTF8Encoding(true)))
                 {
                     return reader.ReadToEnd();
                 }
             }
-        }   
+        }  
     }
 }
