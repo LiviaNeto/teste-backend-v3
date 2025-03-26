@@ -18,7 +18,8 @@ namespace TheatricalPlayersRefactoringKata.Domain.Entities
                 return baseValue;
             }
             
-            return baseValue + 10m * (audience - 30);
+            return baseValue + (10m * (audience - 30));
+
         }
     }
 }

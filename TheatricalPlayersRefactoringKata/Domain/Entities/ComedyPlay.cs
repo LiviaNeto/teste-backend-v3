@@ -13,14 +13,12 @@ namespace TheatricalPlayersRefactoringKata.Domain.Entities
         {
             decimal baseValue = NormalizeLines(lines) / 10m;
                         
-            decimal charge = baseValue + (3m * audience);
-            Console.WriteLine(charge);
+            decimal charge = baseValue + (3m * audience);            
 
             if (audience > 20)
             {
                 charge += 100m + (5m * (audience - 20));
             }
-            Console.WriteLine(charge);
 
             return charge;
         }

@@ -1,15 +1,13 @@
 using TheatricalPlayersRefactoringKata.Domain.Entities;
 
-namespace TheatricalPlayersRefactoringKata;
+namespace TheatricalPlayersRefactoringKata.Domain.Entities;
 
 public class Play
 {
-    public int _id;
     private string _name;
     private int _lines;
     private PlayType _type;
 
-    public int Id { get => _id; }
     public string Name { get => _name; set => _name = value; }
     public int Lines { get => _lines; set => _lines = value; }
     public PlayType Type { get => _type; set => _type = value; }

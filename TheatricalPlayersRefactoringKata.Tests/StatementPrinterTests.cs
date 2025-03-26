@@ -3,64 +3,133 @@ using System.Collections.Generic;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using Xunit;
+using TheatricalPlayersRefactoringKata;
+using TheatricalPlayersRefactoringKata.Domain.Entities;
+using TheatricalPlayers.Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using TheatricalPlayersRefactoringKata.Application.Interfaces;
+using TheatricalPlayersRefactoringKata.Presentation.Controllers;
+using TheatricalPlayersRefactoringKata.Presentation.Formatters;
+using TheatricalPlayersRefactoringKata.Application.Services;
 
-namespace TheatricalPlayersRefactoringKata.Tests;
-
-public class StatementPrinterTests
+namespace TheatricalPlayersRefactoringKata.Tests
 {
-    [Fact]
-    [UseReporter(typeof(DiffReporter))]
-    public void TestStatementExampleLegacy()
+    public class StatementPrinterTests
     {
-        var plays = new Dictionary<string, Play>();
-        plays.Add("hamlet", new Play("Hamlet", 4024, "tragedy"));
-        plays.Add("as-like", new Play("As You Like It", 2670, "comedy"));
-        plays.Add("othello", new Play("Othello", 3560, "tragedy"));
+        private static ServiceProvider ConfigureServices()
+        {
+            return new ServiceCollection()
+                .AddSingleton<IStatementGeneratorService, StatementService>()
+                .AddSingleton<TextStatementFormatter>() 
+                .AddSingleton<XmlStatementFormatter>()   
+                .AddSingleton<StatementController>()     
+                .BuildServiceProvider();
+        }
 
-        Invoice invoice = new Invoice(
-            "BigCo",
-            new List<Performance>
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void TestStatementExampleLegacy()
+        {
+            var playTypeConfig = new PlayTypeConfiguration();
+
+            var plays = new Dictionary<string, Play>
             {
-                new Performance("hamlet", 55),
-                new Performance("as-like", 35),
-                new Performance("othello", 40),
-            }
-        );
+                { "hamlet", new Play("Hamlet", 4024, playTypeConfig.GetPlayType("tragedy")) },
+                { "as-like", new Play("As You Like It", 2670, playTypeConfig.GetPlayType("comedy")) },
+                { "othello", new Play("Othello", 3560, playTypeConfig.GetPlayType("tragedy")) }
+            };
 
-        StatementPrinter statementPrinter = new StatementPrinter();
-        var result = statementPrinter.Print(invoice, plays);
+            Invoice invoice = new Invoice(
+                "BigCo",
+                new List<Performance>
+                {
+                    new Performance("hamlet", 55),
+                    new Performance("as-like", 35),
+                    new Performance("othello", 40),
+                }
+            );
 
-        Approvals.Verify(result);
-    }
+            StatementPrinter statementPrinter = new StatementPrinter();
+            var result = statementPrinter.Print(invoice, plays);
 
-    [Fact]
-    [UseReporter(typeof(DiffReporter))]
-    public void TestTextStatementExample()
-    {
-        var plays = new Dictionary<string, Play>();
-        plays.Add("hamlet", new Play("Hamlet", 4024, "tragedy"));
-        plays.Add("as-like", new Play("As You Like It", 2670, "comedy"));
-        plays.Add("othello", new Play("Othello", 3560, "tragedy"));
-        plays.Add("henry-v", new Play("Henry V", 3227, "history"));
-        plays.Add("john", new Play("King John", 2648, "history"));
-        plays.Add("richard-iii", new Play("Richard III", 3718, "history"));
+            Approvals.Verify(result);
+        }
 
-        Invoice invoice = new Invoice(
-            "BigCo",
-            new List<Performance>
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void TestTextStatementExample()
+        {
+            var serviceProvider = ConfigureServices();
+
+            var playTypeConfig = new PlayTypeConfiguration();
+            
+            var plays = new Dictionary<string, Play>
             {
-                new Performance("hamlet", 55),
-                new Performance("as-like", 35),
-                new Performance("othello", 40),
-                new Performance("henry-v", 20),
-                new Performance("john", 39),
-                new Performance("henry-v", 20)
-            }
-        );
+                { "hamlet", new Play("Hamlet", 4024, playTypeConfig.GetPlayType("tragedy")) },
+                { "as-like", new Play("As You Like It", 2670, playTypeConfig.GetPlayType("comedy")) },
+                { "othello", new Play("Othello", 3560, playTypeConfig.GetPlayType("tragedy")) },
+                { "henry-v", new Play("Henry V", 3227, playTypeConfig.GetPlayType("historical")) },
+                { "john", new Play("King John", 2648, playTypeConfig.GetPlayType("historical")) },
+                { "richard-iii", new Play("Richard III", 3718, playTypeConfig.GetPlayType("historical")) }
+            };
+            
+            Invoice invoice = new Invoice(
+                "BigCo",
+                new List<Performance>
+                {
+                    new Performance("hamlet", 55),
+                    new Performance("as-like", 35),
+                    new Performance("othello", 40),
+                    new Performance("henry-v", 20),
+                    new Performance("john", 39),
+                    new Performance("henry-v", 20)
+                }
+            );
 
-        StatementPrinter statementPrinter = new StatementPrinter();
-        var result = statementPrinter.Print(invoice, plays);
+            var statementController = serviceProvider.GetRequiredService<StatementController>();
 
-        Approvals.Verify(result);
+            string textStatement = statementController.GenerateTextStatement(invoice, plays);
+            
+            Approvals.Verify(textStatement);
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void TestXmlStatementExample()
+        {
+            var serviceProvider = ConfigureServices();
+
+            var playTypeConfig = new PlayTypeConfiguration();
+
+            var plays = new Dictionary<string, Play>
+            {
+                { "hamlet", new Play("Hamlet", 4024, playTypeConfig.GetPlayType("tragedy")) },
+                { "as-like", new Play("As You Like It", 2670, playTypeConfig.GetPlayType("comedy")) },
+                { "othello", new Play("Othello", 3560, playTypeConfig.GetPlayType("tragedy")) },
+                { "henry-v", new Play("Henry V", 3227, playTypeConfig.GetPlayType("historical")) },
+                { "john", new Play("King John", 2648, playTypeConfig.GetPlayType("historical")) },
+                { "richard-iii", new Play("Richard III", 3718, playTypeConfig.GetPlayType("historical")) }
+            };
+
+            var invoice = new Invoice(
+                "BigCo",
+                new List<Performance>
+                {
+                    new Performance("hamlet", 55),
+                    new Performance("as-like", 35),
+                    new Performance("othello", 40),
+                    new Performance("henry-v", 20),
+                    new Performance("john", 39),
+                    new Performance("henry-v", 20)
+                }
+            );
+
+            var statementController = serviceProvider.GetRequiredService<StatementController>();
+
+            string xmlStatement = statementController.GenerateXmlStatement(invoice, plays);   
+
+            Approvals.Verify(xmlStatement);
+        }
     }
 }

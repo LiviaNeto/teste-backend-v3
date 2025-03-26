@@ -1,4 +1,4 @@
-namespace TheatricalPlayersRefactoringKata;
+namespace TheatricalPlayersRefactoringKata.Domain.Entities;
 
 public class Performance
 {
