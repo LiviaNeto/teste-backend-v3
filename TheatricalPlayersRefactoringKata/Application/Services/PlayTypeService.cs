@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TheatricalPlayersRefactoringKata.Domain.Entities;
 using TheatricalPlayersRefactoringKata.Domain.Interfaces;
+using TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories;
 
 namespace TheatricalPlayersRefactoringKata.Application.Services
 {
