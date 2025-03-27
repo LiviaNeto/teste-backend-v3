@@ -1,5 +1,3 @@
-using TheatricalPlayersRefactoringKata.Domain.Entities;
-
 namespace TheatricalPlayersRefactoringKata.Domain.Entities;
 
 public class Play

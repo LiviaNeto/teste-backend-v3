@@ -17,6 +17,8 @@ namespace TheatricalPlayersRefactoringKata.Application.Extensions
             services.AddScoped<PerformanceService>();
             services.AddScoped<IPlayService, PlayService>();
             services.AddScoped<IPerformanceRepository, InMemoryPerformanceRepository>();
+            services.AddScoped<IInvoiceRepository, InMemoryInvoiceRepository>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
             return services;
         }   
     }

@@ -7,7 +7,7 @@ using TheatricalPlayersRefactoringKata.Application.Services;
 using TheatricalPlayersRefactoringKata.Domain.Entities;
 using TheatricalPlayersRefactoringKata.Domain.ValueObjects;
 using TheatricalPlayersRefactoringKata.Application.Interfaces;
-using TheatricalPlayers.Infrastructure.Repositories;
+using TheatricalPlayersRefactoringKata.Infrastructure.Repositories;
 
 namespace TheatricalPlayersRefactoringKata.Tests.Services
 {

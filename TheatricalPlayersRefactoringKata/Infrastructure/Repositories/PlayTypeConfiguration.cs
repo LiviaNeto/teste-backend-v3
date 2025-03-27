@@ -4,7 +4,7 @@ using TheatricalPlayersRefactoringKata.Domain.Entities;
 using TheatricalPlayersRefactoringKata.Domain.Interfaces;
 using TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories;
 
-namespace TheatricalPlayers.Infrastructure.Repositories
+namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
 {
     public class PlayTypeConfiguration : IPlayTypeRepository
     {

@@ -5,12 +5,14 @@ using ApprovalTests.Reporters;
 using Xunit;
 using TheatricalPlayersRefactoringKata;
 using TheatricalPlayersRefactoringKata.Domain.Entities;
-using TheatricalPlayers.Infrastructure.Repositories;
+using TheatricalPlayersRefactoringKata.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using TheatricalPlayersRefactoringKata.Application.Interfaces;
 using TheatricalPlayersRefactoringKata.Presentation.Controllers;
 using TheatricalPlayersRefactoringKata.Presentation.Formatters;
 using TheatricalPlayersRefactoringKata.Application.Services;
+using TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories;
+using Moq;
 
 namespace TheatricalPlayersRefactoringKata.Tests
 {
@@ -40,6 +42,14 @@ namespace TheatricalPlayersRefactoringKata.Tests
                 { "othello", new Play("Othello", 3560, playTypeConfig.GetPlayType("tragedy")) }
             };
 
+            // Create a mock repository
+            var mockPlayRepository = new Mock<IPlayRepository>();
+            mockPlayRepository.Setup(repo => repo.GetPlayByName(It.IsAny<string>()))
+                .Returns<string>(name => plays.ContainsKey(name) ? plays[name] : null);
+
+            // Pass the mock repository to StatementPrinter
+            StatementPrinter statementPrinter = new StatementPrinter(mockPlayRepository.Object);
+
             Invoice invoice = new Invoice(
                 "BigCo",
                 new List<Performance>
@@ -50,8 +60,7 @@ namespace TheatricalPlayersRefactoringKata.Tests
                 }
             );
 
-            StatementPrinter statementPrinter = new StatementPrinter();
-            var result = statementPrinter.Print(invoice, plays);
+            var result = statementPrinter.Print(invoice);
 
             Approvals.Verify(result);
         }

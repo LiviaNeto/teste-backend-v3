@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using TheatricalPlayersRefactoringKata.Domain.Entities;
-using TheatricalPlayers.Infrastructure.Repositories;
+using TheatricalPlayersRefactoringKata.Infrastructure.Repositories;
 
 namespace TheatricalPlayersRefactoringKata.Tests.Domain.Entities
 {

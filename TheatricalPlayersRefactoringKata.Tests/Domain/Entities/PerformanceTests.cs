@@ -70,7 +70,7 @@ namespace TheatricalPlayersRefactoringKata.Tests.Domain.Entities
         {
             // Act & Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Performance("12345", -1));
-            Assert.Equal("Audience cannot be negative. (Parameter 'audience')", exception.Message);
+            Assert.Equal("Audience cannot be negative. (Parameter '_audience')", exception.Message);
         }
 
         [Theory]
@@ -94,7 +94,7 @@ namespace TheatricalPlayersRefactoringKata.Tests.Domain.Entities
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => performance.Audience = -1);
-            Assert.Equal("Audience cannot be negative. (Parameter 'Audience')", exception.Message);
+            Assert.Equal("Audience cannot be negative. (Parameter '_audience')", exception.Message);
         }
     }   
 }
