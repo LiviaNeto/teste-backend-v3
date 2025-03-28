@@ -15,5 +15,6 @@ namespace TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories
         Play GetPlayByName(string name);
         void Delete(string name);
         void Update(Play play);
+        Dictionary<string, Play> GetAllPlays();
     }
 }

@@ -84,5 +84,10 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
 
             _plays[play.Name] = play;
         }
+
+        public Dictionary<string, Play> GetAllPlays()
+        {
+            return _plays;
+        }
     }
 }

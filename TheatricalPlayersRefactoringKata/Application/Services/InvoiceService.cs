@@ -5,12 +5,25 @@ using TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories;
 using TheatricalPlayersRefactoringKata.Domain.Interfaces.Services;
 using TheatricalPlayersRefactoringKata.Infrastructure.Repositories;
 using TheatricalPlayersRefactoringKata.Domain.DTOs;
+using TheatricalPlayersRefactoringKata.Presentation.Controllers;
+using TheatricalPlayersRefactoringKata.Presentation.Formatters;
+using TheatricalPlayersRefactoringKata.Application.Interfaces;
 
 namespace TheatricalPlayersRefactoringKata.Application.Services
 {
     public class InvoiceService : IInvoiceService
     {
         private readonly IInvoiceRepository _invoiceRepository;
+
+        private static ServiceProvider ConfigureServices()
+        {
+            return new ServiceCollection()
+                .AddSingleton<IStatementGeneratorService, StatementService>()
+                .AddSingleton<TextStatementFormatter>() 
+                .AddSingleton<XmlStatementFormatter>()   
+                .AddSingleton<StatementController>()     
+                .BuildServiceProvider();
+        }
 
         public InvoiceService(IInvoiceRepository invoiceRepository)
         {
@@ -59,6 +72,20 @@ namespace TheatricalPlayersRefactoringKata.Application.Services
         public void DeleteInvoice(string customer)
         {
             _invoiceRepository.Delete(customer);
-        }        
+        }   
+
+        public string GetTextStatementByCustomer(string customer)
+        {     
+            var textStatement = _invoiceRepository.GetTextStatementByCustomer(customer);            
+            
+            return textStatement;
+        }     
+
+        public string GetXmlStatementByCustomer(string customer)
+        {     
+            var xmlStatement = _invoiceRepository.GetXmlStatementByCustomer(customer);            
+            
+            return xmlStatement;
+        } 
     }
 }

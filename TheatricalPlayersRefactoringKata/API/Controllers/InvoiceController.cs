@@ -19,10 +19,12 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
             _invoiceService = invoiceService;
         }
 
-        // Métodos anteriores permanecem os mesmos, apenas substituindo o tipo de _invoiceService
+        /// <summary>
+        /// Create a new invoice.
+        /// </summary>
+        /// <param name="invoiceDto">Object containing invoice data.</param>
+        /// <returns>Returns the created Invoice.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult CreateInvoice([FromBody] Invoice invoice)
         {
             try
@@ -40,16 +42,22 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
             }
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        /// <summary>
+        /// Returns all invoices.
+        /// </summary>
+        /// <returns>List of invoices.</returns>
+        [HttpGet]        
         public ActionResult<IEnumerable<InvoiceDTO>> GetAllInvoices()
         {
             return Ok(_invoiceService.GetAllInvoices());
         }
 
+        /// <summary>
+        /// Search for invoices by customer.
+        /// </summary>
+        /// <param name="customer">Customer.</param>
+        /// <returns>Returns the found customers.</returns>
         [HttpGet("{customer}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<InvoiceDTO> GetInvoiceByCustomer(string customer)
         {
             try
@@ -62,10 +70,12 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a invoice by customer.
+        /// </summary>
+        /// <param name="customer">PlayID.</param>
+        /// <param name="invoiceDto">Invoice data to update.</param>
         [HttpPut("{customer}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult UpdateInvoice(string customer, [FromBody] Invoice invoice)
         {
             if (customer != invoice.Customer)
@@ -88,9 +98,11 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
             }
         }
 
-        [HttpDelete("{customer}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        /// <summary>
+        /// Delete a invoice by customer.
+        /// </summary>
+        /// <param name="customer">Customer.</param>
+        [HttpDelete("{customer}")]        
         public IActionResult DeleteInvoice(string customer)
         {
             try
@@ -101,6 +113,44 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
             catch (KeyNotFoundException)
             {
                 return NotFound($"Invoice for customer {customer} not found.");
+            }
+        }
+
+        /// <summary>
+        /// Return the statement in text by customer.
+        /// </summary>
+        /// <param name="customer">Customer.</param>
+        /// <returns>Returns the statement text.</returns>
+        [HttpGet("textStatement/{customer}")]
+        public IActionResult GetTextStatementByCustomer(string customer)
+        {
+            try
+            {
+                var statement = _invoiceService.GetTextStatementByCustomer(customer);
+                return Ok(statement);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Statement for customer {customer} not found.");
+            }
+        }
+
+        /// <summary>
+        /// Return the statement in XML by customer.
+        /// </summary>
+        /// <param name="customer">Customer.</param>
+        /// <returns>Returns the statement XML.</returns>
+        [HttpGet("xmlStatement/{customer}")]
+        public IActionResult GetXmlStatementByCustomer(string customer)
+        {
+            try
+            {
+                var statement = _invoiceService.GetXmlStatementByCustomer(customer);
+                return Ok(statement);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Statement for customer {customer} not found.");
             }
         }
     }

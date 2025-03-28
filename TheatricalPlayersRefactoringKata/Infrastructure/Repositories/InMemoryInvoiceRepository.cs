@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using TheatricalPlayersRefactoringKata.Domain.Entities;
 using TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories;
 using TheatricalPlayersRefactoringKata.Domain.DTOs;
+using TheatricalPlayersRefactoringKata.Presentation.Controllers;
+using TheatricalPlayersRefactoringKata.Presentation.Formatters;
+using TheatricalPlayersRefactoringKata.Application.Services;
+using TheatricalPlayersRefactoringKata.Application.Interfaces;
 
 namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
 {
@@ -12,6 +16,23 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
     {
         // Dicionário para armazenar as invoices em memória
         private readonly Dictionary<string, Invoice> _invoices = new Dictionary<string, Invoice>();
+
+        private readonly IPlayRepository _playRepository;
+
+        public InMemoryInvoiceRepository(IPlayRepository playRepository)
+        {
+            _playRepository = playRepository ?? throw new ArgumentNullException(nameof(playRepository));
+        }
+
+        private static ServiceProvider ConfigureServices()
+        {
+            return new ServiceCollection()
+                .AddSingleton<IStatementGeneratorService, StatementService>()
+                .AddSingleton<TextStatementFormatter>() 
+                .AddSingleton<XmlStatementFormatter>()   
+                .AddSingleton<StatementController>()     
+                .BuildServiceProvider();
+        }
 
         // Adicionar uma nova invoice
         public void Add(Invoice invoice)
@@ -91,6 +112,40 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             }
             
             _invoices[invoice.Customer] = invoice;
+        }
+
+        public string GetTextStatementByCustomer(string customer)
+        {
+            var serviceProvider = ConfigureServices();
+
+            var invoice = _invoices.Values.FirstOrDefault(
+                i => i.Customer.Equals(customer, StringComparison.OrdinalIgnoreCase)
+            );
+
+            var plays = _playRepository.GetAllPlays();
+
+            var statementController = serviceProvider.GetRequiredService<StatementController>();
+
+            string textStatement = statementController.GenerateTextStatement(invoice, plays);
+            
+            return textStatement;
+        }
+
+        public string GetXmlStatementByCustomer(string customer)
+        {
+            var serviceProvider = ConfigureServices();
+            
+            var invoice = _invoices.Values.FirstOrDefault(
+                i => i.Customer.Equals(customer, StringComparison.OrdinalIgnoreCase)
+            );
+
+            var plays = _playRepository.GetAllPlays();
+
+            var statementController = serviceProvider.GetRequiredService<StatementController>();
+
+            string xmlStatement = statementController.GenerateXmlStatement(invoice, plays);
+            
+            return xmlStatement;
         }
     }     
 }

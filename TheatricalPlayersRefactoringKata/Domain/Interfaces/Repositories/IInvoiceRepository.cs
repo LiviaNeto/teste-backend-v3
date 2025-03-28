@@ -14,6 +14,8 @@ namespace TheatricalPlayersRefactoringKata.Domain.Interfaces.Repositories
         InvoiceDTO GetByCustomer(string customer);
         Invoice GetInvoiceByCustomer(string customer);
         void Delete(string customer);
-        void Update(Invoice invoice);     
+        void Update(Invoice invoice);    
+        string GetTextStatementByCustomer(string customer); 
+        string GetXmlStatementByCustomer(string customer);
     }
 }
