@@ -42,12 +42,10 @@ namespace TheatricalPlayersRefactoringKata.Tests
                 { "othello", new Play("Othello", 3560, playTypeConfig.GetPlayType("tragedy")) }
             };
 
-            // Create a mock repository
             var mockPlayRepository = new Mock<IPlayRepository>();
             mockPlayRepository.Setup(repo => repo.GetPlayByName(It.IsAny<string>()))
                 .Returns<string>(name => plays.ContainsKey(name) ? plays[name] : null);
 
-            // Pass the mock repository to StatementPrinter
             StatementPrinter statementPrinter = new StatementPrinter(mockPlayRepository.Object);
 
             Invoice invoice = new Invoice(

@@ -36,7 +36,6 @@ public class Invoice
         _performances = performances ?? new List<Performance>();
     }
 
-    // Parameterless constructor for deserialization
     public Invoice()
     {
         _customer = string.Empty;

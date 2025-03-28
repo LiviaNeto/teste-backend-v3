@@ -49,10 +49,8 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
 
         public Performance GetPerformancesByPlayId(string playId)
         {
-            // Modify this method to correctly retrieve a single performance
             if (_performances.TryGetValue(playId, out var performanceList))
             {
-                // Return the first performance for the given play ID
                 return performanceList.FirstOrDefault();
             }
             return null;

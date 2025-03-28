@@ -35,7 +35,7 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Formatters
             {
                 var xmlWriterSettings = new XmlWriterSettings
                 {
-                    Encoding = new UTF8Encoding(true), // Importante: true para incluir BOM
+                    Encoding = new UTF8Encoding(true), 
                     Indent = true,
                     OmitXmlDeclaration = false
                 };
@@ -46,8 +46,7 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Formatters
                 }
 
                 memoryStream.Position = 0;
-                
-                // Use UTF8Encoding(true) no StreamReader
+                                
                 using (var reader = new StreamReader(memoryStream, new UTF8Encoding(true)))
                 {
                     return reader.ReadToEnd();

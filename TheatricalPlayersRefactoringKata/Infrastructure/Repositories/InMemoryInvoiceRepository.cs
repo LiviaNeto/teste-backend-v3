@@ -14,7 +14,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
 {
     public class InMemoryInvoiceRepository : IInvoiceRepository
     {
-        // Dicionário para armazenar as invoices em memória
         private readonly Dictionary<string, Invoice> _invoices = new Dictionary<string, Invoice>();
 
         private readonly IPlayRepository _playRepository;
@@ -34,7 +33,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
                 .BuildServiceProvider();
         }
 
-        // Adicionar uma nova invoice
         public void Add(Invoice invoice)
         {
             if (_invoices.ContainsKey(invoice.Customer))
@@ -45,7 +43,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             Console.WriteLine($"Invoice added for customer: {_invoices}");
         }
 
-        // Obter todas as invoices
         public IEnumerable<InvoiceDTO> GetAll()
         {
             return _invoices.Values.Select(invoice => new InvoiceDTO
@@ -59,7 +56,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             });
         }
 
-        // Obter invoice por nome do cliente
         public InvoiceDTO GetByCustomer(string customer)
         {
             var invoice = _invoices.Values.FirstOrDefault(
@@ -82,7 +78,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             };
         }
 
-        // Obter invoice completa por nome do cliente
         public Invoice GetInvoiceByCustomer(string customer)
         {
             return _invoices.Values.FirstOrDefault(
@@ -90,7 +85,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             );
         }
 
-        // Deletar uma invoice
         public void Delete(string customer)
         {
             if (!_invoices.Remove(customer))
@@ -99,7 +93,6 @@ namespace TheatricalPlayersRefactoringKata.Infrastructure.Repositories
             }
         }
 
-        // Atualizar uma invoice
         public void Update(Invoice invoice)
         {
             var oldEntry = _invoices.FirstOrDefault(

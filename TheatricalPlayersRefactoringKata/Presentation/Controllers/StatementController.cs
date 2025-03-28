@@ -26,13 +26,13 @@ namespace TheatricalPlayersRefactoringKata.Presentation.Controllers
         public string GenerateTextStatement(Invoice invoice, Dictionary<string, Play> plays)
         {
             var statementResult = _statementService.GenerateStatement(invoice, plays);
-            return _textFormatter.Format(statementResult); // Usando o TextStatementFormatter
+            return _textFormatter.Format(statementResult); 
         }
 
         public string GenerateXmlStatement(Invoice invoice, Dictionary<string, Play> plays)
         {
             var statementResult = _statementService.GenerateStatement(invoice, plays);
-            return _xmlFormatter.Format(statementResult); // Usando o XmlStatementFormatter
+            return _xmlFormatter.Format(statementResult); 
         }
     }
 

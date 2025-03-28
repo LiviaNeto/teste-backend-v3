@@ -10,7 +10,6 @@ namespace TheatricalPlayersRefactoringKata
     {
         private readonly IPlayRepository _playRepository;
 
-        // O construtor agora aceita um IPlayRepository via injeção de dependência
         public StatementPrinter(IPlayRepository playRepository)
         {
             _playRepository = playRepository ?? throw new ArgumentNullException(nameof(playRepository));
@@ -25,7 +24,6 @@ namespace TheatricalPlayersRefactoringKata
 
             foreach (var perf in invoice.Performances)
             {
-                // Obter o Play a partir do repositório IPlayRepository
                 var play = _playRepository.GetPlayByName(perf.PlayId);
                 if (play == null)
                 {
@@ -34,10 +32,8 @@ namespace TheatricalPlayersRefactoringKata
 
                 var thisAmount = play.Type.CalculateCharge(play.Lines, perf.Audience);
 
-                // Calcular créditos usando PlayType
                 volumeCredits += play.Type.CalculateCredits(perf.Audience);
 
-                // Gerar a linha do relatório
                 result += string.Format(cultureInfo, "  {0}: {1:C} ({2} seats)\n", 
                     play.Name, 
                     thisAmount, 

@@ -47,13 +47,11 @@ namespace TheatricalPlayersRefactoringKata.Application.Services
                 throw new KeyNotFoundException("Performance not found.");
             }
 
-            // Update the existing performance
             existingPerformance.PlayId = performanceDto.PlayId;
             existingPerformance.Audience = performanceDto.Audience;
        
             _performanceRepository.Update(existingPerformance);  
 
-            // Retrieve the updated performance
             var updatedPerformance = _performanceRepository.GetPerformancesByPlayId(performanceDto.PlayId);
             if (updatedPerformance == null)
             {

@@ -32,7 +32,6 @@ namespace TheatricalPlayersRefactoringKata.Application.Services
 
         public void CreateInvoice(Invoice invoice)
         {
-            // Validações adicionais de negócio podem ser feitas aqui
             if (invoice.Performances == null || invoice.Performances.Count == 0)
             {
                 throw new ArgumentException("Invoice must have at least one performance.");
@@ -60,7 +59,6 @@ namespace TheatricalPlayersRefactoringKata.Application.Services
 
         public void UpdateInvoice(Invoice invoice)
         {
-            // Validações adicionais de negócio podem ser feitas aqui
             if (invoice.Performances == null || invoice.Performances.Count == 0)
             {
                 throw new ArgumentException("Invoice must have at least one performance.");

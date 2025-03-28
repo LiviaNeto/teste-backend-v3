@@ -46,7 +46,6 @@ public class Performance
         _audience = audience;
     }
 
-    // Parameterless constructor for deserialization
     public Performance()
     {
         _playId = string.Empty;
